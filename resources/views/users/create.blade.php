@@ -3,8 +3,8 @@
 @section('title','Novo Usuario')
 
 @section('content')
+<p class="text-sm"  class = "italic" class ="bg-blue-50">Novo Usuário</p>
 
-<h1>Novo Usuário</h1>
 
 @include('includes.validations-form')
 

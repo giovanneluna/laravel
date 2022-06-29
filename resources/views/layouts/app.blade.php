@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> Laravel</title>
-</head>
-<body>
+
     
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-lime-100">
+    
+    <div class="container mx-auto px-1 py-1">
     <div class="app">
         @yield('content')
     </div>
