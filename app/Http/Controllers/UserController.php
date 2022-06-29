@@ -8,17 +8,34 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+
+    protected $model;
+
+    public function __construct(User $user)
     {
-        $users = User::get();
+        $this->model = $user;
+    }
+
+
+    public function index(Request $request)
+    {
+    
+        $search = $request->search;
+        $users = $this->model->where(function ($query) use($search) {
+            if ($search){
+            $query->where('email',$search);
+            $query->orWhere('name','LIKE',"%{$search}%");
+            }
+        })->get();
+        
 
         return view('users.index',compact('users'));
     }
 
     public function show($id)
     {
-        // $user = User::where('id',$id)->first();
-        if (!$user = User::find($id))
+        // $user = $this->model->where('id',$id)->first();
+        if (!$user = $this->model->find($id))
         return redirect()->route('users.index');
         
         return view('users.show', compact('user'));
@@ -35,7 +52,7 @@ class UserController extends Controller
         $data = $request->all();
         $data['password'] = bcrypt($request->password);
 
-        User::create($data);
+        $this->model->create($data);
 
         // return redirect()->route('users.show',$user->id);
         return redirect()->route('users.index');
@@ -47,5 +64,32 @@ class UserController extends Controller
         // $user->password = $request->password;
         // $user->save();
     
+    }
+
+    public function edit($id)
+    {
+        if (!$user = $this->model->find($id))
+        return redirect()->route('users.index');
+
+        return view('users.edit',compact('user'));
+    }
+
+    public function update(StoreUpdateUserFormRequest $request, $id)
+    {
+        if (!$user = $this->model->find($id))
+        return redirect()->route('users.index');
+
+
+        $data = $request->only('name', 'email');
+        if ($request->password)
+        $data['password'] = bcrypt($request->password);
+
+        $user->update($data);
+
+        return redirect()->route('users.index');
+
+        
+
+        
     }
 }
