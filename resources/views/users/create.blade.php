@@ -12,6 +12,7 @@
     @csrf
     @include('users._partials.form')
 
+    <div class="shadow-md "></div>
 </form>
 
 @endsection

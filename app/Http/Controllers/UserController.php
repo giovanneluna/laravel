@@ -93,4 +93,9 @@ class UserController extends Controller
 
         
     }
+
+    public function comments()
+    {
+            return $this->hasMany(Comment::class);
+    }
 }
