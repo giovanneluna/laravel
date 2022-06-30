@@ -4,25 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserFormRequest;
 use App\Http\Requests\UpdateUserFormRequest;
+use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
-    protected $model;
-
-    public function __construct(User $user)
+    public function __construct(protected User $user)
     {
-        $this->model = $user;
     }
-
-
+    
     public function index(Request $request)
     {
     
         $search = $request->search;
-        $users = $this->model->where(function ($query) use($search) {
+        $users = $this->user->where(function ($query) use($search) {
             if ($search){
             $query->where('email',$search);
             $query->orWhere('name','LIKE',"%{$search}%");
@@ -35,8 +31,8 @@ class UserController extends Controller
 
     public function show($id)
     {
-        // $user = $this->model->where('id',$id)->first();
-        if (!$user = $this->model->find($id))
+         $user = $this->user->where('id',$id)->first();
+        if (!$user = $this->user->find($id))
         return redirect()->route('users.index');
         
         return view('users.show', compact('user'));
@@ -53,7 +49,7 @@ class UserController extends Controller
         $data = $request->all();
         $data['password'] = bcrypt($request->password);
 
-        $this->model->create($data);
+        $this->user->create($data);
 
         // return redirect()->route('users.show',$user->id);
         return redirect()->route('users.index');
@@ -69,7 +65,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        if (!$user = $this->model->find($id))
+        if (!$user = $this->user->find($id))
         return redirect()->route('users.index');
 
         return view('users.edit',compact('user'));
@@ -77,7 +73,7 @@ class UserController extends Controller
 
     public function update(UpdateUserFormRequest $request, $id)
     {
-        if (!$user = $this->model->find($id))
+        if (!$user = $this->user->find($id))
         return redirect()->route('users.index');
 
 
