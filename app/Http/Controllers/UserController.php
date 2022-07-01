@@ -91,9 +91,10 @@ class UserController extends Controller
            if ($user->image && Storage::exists($user->image)) { 
                Storage::delete($user->image);            
             }
+            $data['image'] = $request->image->store('users');
                
         }
-        $data['image'] = $request->image->store('users');
+        
         
         $user->update($data);
 
