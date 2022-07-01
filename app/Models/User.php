@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'image',
     ];
 
     /**
@@ -43,17 +44,18 @@ class User extends Authenticatable
 
     public function getUsers(string|null $search = null)
     {
-     $users = $this->model->where(function ($query) use($search) {
-        if ($search){
-        $query->where('email',$search);
-        $query->orWhere('name','LIKE',"%{$search}%");
-        }
-    })->get();
-
+        $users = $this->where(function ($query) use ($search) {
+            if ($search) {
+                $query->where('email', $search);
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        })
+        ->with('comments')
+        ->paginate(2);
         return $users;
     
     }
     public function comments(){
-        return $this->hasMany(comment::class);
+        return $this->hasMany(Comment::class);
     }
 }

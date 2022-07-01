@@ -36,7 +36,12 @@ class UpdateUserFormRequest extends FormRequest
             'nullable',
             'min:6',
             'min:15',
-          ]
+         ],
+          'image' => [
+            'nullable',
+            'image',
+            'max:4000',
+         ]
          ];
 
         return $rules;
